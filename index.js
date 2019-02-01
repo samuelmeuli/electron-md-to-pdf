@@ -4,31 +4,61 @@ const BrowserWindow = require("electron").BrowserWindow
 const fs = require("fs");
 const showdown = require("showdown");
 
-const converter = new showdown.Converter();
+const DEFAULT_OPTIONS = {
+	cssString: "",
+	cssFiles: [],
+	mdFlavor: "github",
+	pdfOptions: {},
+	showdownOptions: {},
+	wrapperClasses: "",
+};
 
-function mdToPdfBuffer(md) {
+function mdToPdfBuffer(md, options) {
 	return new Promise((resolve, reject) => {
+		const optionsWithDefaults = {
+			...DEFAULT_OPTIONS,
+			...options,
+		};
+		const {
+			cssString,
+			cssFiles,
+			mdFlavor,
+			pdfOptions,
+			showdownOptions,
+			wrapperClasses,
+		} = optionsWithDefaults;
+
+		// Read and concatenate CSS files
+		let cssFileString;
+		cssFiles.forEach(filePath => {
+			const fileString = fs.readFileSync(filePath, "utf8");
+			cssFileString += `${fileString}\n\n`;
+		});
+
+		const converter = new showdown.Converter(showdownOptions);
+		showdown.setFlavor(mdFlavor);
+
 		// Convert Markdown to HTML
 		const html = converter.makeHtml(md);
-		const htmlEncoded = encodeURIComponent(html);
+		const htmlWrapped = `<div class="${wrapperClasses}">${html}</div>`;
+		const htmlEncoded = encodeURIComponent(htmlWrapped);
 
 		// Open new BrowserWindow and print it when it has finished loading
 		let pdfWindow = new BrowserWindow({
 			show: false,
+			webPreferences: {
+				nodeIntegration: false,
+			},
 		});
 		pdfWindow.webContents.on("did-finish-load", () => {
-			pdfWindow.webContents.printToPDF(
-				{
-					pageSize: "A4",
-				},
-				(err, data) => {
-					if (err) {
-						return reject(err);
-					}
-					pdfWindow.close();
-					return resolve(data);
-				},
-			);
+			pdfWindow.webContents.insertCSS(`${cssFileString}\n\n${cssString}`);
+			pdfWindow.webContents.printToPDF(pdfOptions, (err, data) => {
+				if (err) {
+					return reject(err);
+				}
+				pdfWindow.close();
+				return resolve(data);
+			});
 		});
 		pdfWindow.on("closed", () => {
 			pdfWindow = null;
@@ -39,12 +69,16 @@ function mdToPdfBuffer(md) {
 	});
 }
 
-function mdToPdfFile(md, filePath) {
-	return new Promise(resolve => {
-		return mdToPdfBuffer(md).then(pdfBuffer => {
-			fs.writeFileSync(filePath, pdfBuffer);
-			return resolve();
-		});
+function mdToPdfFile(md, filePath, options) {
+	return new Promise((resolve, reject) => {
+		return mdToPdfBuffer(md, options)
+			.then(pdfBuffer => {
+				fs.writeFileSync(filePath, pdfBuffer);
+				return resolve();
+			})
+			.catch(err => {
+				return reject(err);
+			});
 	});
 }
 
