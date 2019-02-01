@@ -27,7 +27,10 @@ function createMainWindow() {
 }
 
 function exportFromMain() {
-	mdToPdfFile(md, PDF_PATH_MAIN)
+	mdToPdfFile(md, PDF_PATH_MAIN, {
+		cssFiles: [`${__dirname}/../node_modules/github-markdown-css/github-markdown.css`],
+		wrapperClasses: "markdown-body",
+	})
 		.then(() => {
 			dialog.showMessageBox(null, {
 				title: "Export successful",

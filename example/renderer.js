@@ -8,7 +8,10 @@ const PDF_PATH_RENDERER = `${__dirname}/export-renderer.pdf`;
 const md = fs.readFileSync(`${__dirname}/text.md`, "utf8");
 
 function exportFromRenderer() {
-	mdToPdfFile(md, PDF_PATH_RENDERER)
+	mdToPdfFile(md, PDF_PATH_RENDERER, {
+		cssFiles: [`${__dirname}/../node_modules/github-markdown-css/github-markdown.css`],
+		wrapperClasses: "markdown-body",
+	})
 		.then(() => {
 			dialog.showMessageBox(null, {
 				title: "Export successful",
