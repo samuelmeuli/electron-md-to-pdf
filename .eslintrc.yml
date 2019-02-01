@@ -1,0 +1,20 @@
+root: true
+
+extends:
+  - airbnb-base
+  - prettier
+
+env:
+  browser: true
+  node: true
+
+rules:
+  capitalized-comments:
+    - error
+    - always
+    - ignoreConsecutiveComments: true
+      ignorePattern: prettier-ignore
+  no-console:
+    - error
+    - allow:
+        - error

@@ -1,0 +1,56 @@
+{
+	"name": "electron-md-to-pdf",
+	"version": "0.1.0",
+	"description": "Convert Markdown to PDF in Electron apps",
+	"keywords": [
+		"electron",
+		"markdown",
+		"md",
+		"pdf",
+		"convert",
+		"export"
+	],
+	"main": "index.js",
+	"author": "Samuel Meuli <me@samuelmeuli.com>",
+	"repository": "github:samuelmeuli/electron-md-to-pdf",
+	"license": "MIT",
+	"scripts": {
+		"format": "prettier --ignore-path .gitignore --write",
+		"lint": "eslint"
+	},
+	"dependencies": {
+		"showdown": "^1.9.0"
+	},
+	"peerDependencies": {
+		"electron": "^2.0.0|^3.0.0|^4.0.0"
+	},
+	"devDependencies": {
+		"electron": "^4.0.3",
+		"eslint": "5.12.1",
+		"eslint-config-airbnb-base": "13.1.0",
+		"eslint-config-prettier": "^4.0.0",
+		"eslint-plugin-import": "^2.14.0",
+		"husky": "^1.1.2",
+		"lint-staged": "^8.1.0",
+		"prettier": "^1.15.3"
+	},
+	"files": [
+		"index.js"
+	],
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged"
+		}
+	},
+	"lint-staged": {
+		"*.js": [
+			"yarn format",
+			"yarn lint",
+			"git add"
+		],
+		"*.{css,html,json,md,scss,yml}": [
+			"yarn format",
+			"git add"
+		]
+	}
+}
