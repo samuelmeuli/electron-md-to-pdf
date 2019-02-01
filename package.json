@@ -15,6 +15,7 @@
 	"repository": "github:samuelmeuli/electron-md-to-pdf",
 	"license": "MIT",
 	"scripts": {
+		"start": "electron example/main.js",
 		"format": "prettier --ignore-path .gitignore --write",
 		"lint": "eslint"
 	},

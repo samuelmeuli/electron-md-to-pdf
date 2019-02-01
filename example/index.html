@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>electron-md-to-pdf</title>
+	</head>
+
+	<body>
+		<div>
+			<h1>electron-md-to-pdf</h1>
+			<button type="button" id="button-export-main">
+				Export from main process
+			</button>
+			<button type="button" id="button-export-renderer">
+				Export from renderer process
+			</button>
+		</div>
+
+		<script>
+			require("./renderer.js");
+		</script>
+	</body>
+</html>
