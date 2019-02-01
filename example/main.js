@@ -1,6 +1,10 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const { app, BrowserWindow, dialog, ipcMain } = require("electron");
+const electronDebug = require("electron-debug");
 
 const { mdToPdfFile } = require("../index");
+
+electronDebug();
 
 const PDF_PATH_MAIN = `${__dirname}/export-main.pdf`;
 let mainWindow;
