@@ -1,10 +1,11 @@
 const { ipcRenderer } = require("electron");
 const { dialog } = require("electron").remote;
+const fs = require("fs");
 
 const { mdToPdfFile } = require("../index");
 
 const PDF_PATH_RENDERER = `${__dirname}/export-renderer.pdf`;
-const md = "# Hello\n\nWorld!"; // TODO replace
+const md = fs.readFileSync(`${__dirname}/text.md`, "utf8");
 
 function exportFromRenderer() {
 	mdToPdfFile(md, PDF_PATH_RENDERER)

@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const { app, BrowserWindow, dialog, ipcMain } = require("electron");
 const electronDebug = require("electron-debug");
+const fs = require("fs");
 
 const { mdToPdfFile } = require("../index");
 
@@ -8,7 +9,7 @@ electronDebug();
 
 const PDF_PATH_MAIN = `${__dirname}/export-main.pdf`;
 let mainWindow;
-const md = "# Hello\n\nWorld!"; // TODO replace
+const md = fs.readFileSync(`${__dirname}/text.md`, "utf8");
 
 function onClosed() {
 	mainWindow = null;
