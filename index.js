@@ -28,19 +28,29 @@ function mdToPdfBuffer(md, options) {
 			wrapperClasses,
 		} = optionsWithDefaults;
 
-		// Read and concatenate CSS files
-		let cssFileString;
+		// Read and concatenate CSS files and CSS string
+		let css = "";
 		cssFiles.forEach(filePath => {
 			const fileString = fs.readFileSync(filePath, "utf8");
-			cssFileString += `${fileString}\n\n`;
+			css += `${fileString}\n\n`;
 		});
+		css += cssString;
 
 		const converter = new showdown.Converter(showdownOptions);
 		showdown.setFlavor(mdFlavor);
 
 		// Convert Markdown to HTML
 		const html = converter.makeHtml(md);
-		const htmlWrapped = `<div class="${wrapperClasses}">${html}</div>`;
+		const htmlWrapped = `
+			<!DOCTYPE html>
+			<html>
+				<body>
+					<div class="${wrapperClasses}">
+						${html}
+					</div>
+				</body>
+			</html>
+		`;
 		const htmlEncoded = encodeURIComponent(htmlWrapped);
 
 		// Open new BrowserWindow and print it when it has finished loading
@@ -51,7 +61,7 @@ function mdToPdfBuffer(md, options) {
 			},
 		});
 		pdfWindow.webContents.on("did-finish-load", () => {
-			pdfWindow.webContents.insertCSS(`${cssFileString}\n\n${cssString}`);
+			pdfWindow.webContents.insertCSS(css);
 			pdfWindow.webContents.printToPDF(pdfOptions, (err, data) => {
 				if (err) {
 					return reject(err);
