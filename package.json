@@ -16,8 +16,8 @@
 	"license": "MIT",
 	"scripts": {
 		"start": "electron example/main.js",
-		"format": "prettier --ignore-path .gitignore --write",
-		"lint": "eslint"
+		"format": "prettier --write",
+		"lint": "eslint --fix"
 	},
 	"dependencies": {
 		"showdown": "^1.9.0"
@@ -51,7 +51,7 @@
 			"yarn lint",
 			"git add"
 		],
-		"*.{css,html,json,md,scss,yml}": [
+		"*.{html,json,md,yml}": [
 			"yarn format",
 			"git add"
 		]
