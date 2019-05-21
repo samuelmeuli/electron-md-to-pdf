@@ -17,7 +17,8 @@
 	"scripts": {
 		"start": "electron example/main.js",
 		"format": "prettier --write",
-		"lint": "eslint --fix"
+		"lint": "eslint --fix",
+		"release": "np"
 	},
 	"dependencies": {
 		"showdown": "^1.9.0"
@@ -35,6 +36,7 @@
 		"github-markdown-css": "^3.0.1",
 		"husky": "^2.2.0",
 		"lint-staged": "^8.1.6",
+		"np": "^5.0.2",
 		"prettier": "^1.17.0"
 	},
 	"files": [
