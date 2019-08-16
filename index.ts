@@ -1,10 +1,19 @@
-const BrowserWindow = require("electron").BrowserWindow
-	? require("electron").BrowserWindow
-	: require("electron").remote.BrowserWindow;
-const fs = require("fs");
-const showdown = require("showdown");
+import electron, { PrintToPDFOptions } from "electron";
+import fs from "fs";
+import showdown, { Flavor, ShowdownOptions } from "showdown";
 
-const DEFAULT_OPTIONS = {
+const BrowserWindow = electron.BrowserWindow || electron.remote.BrowserWindow;
+
+interface Options {
+	cssString: string;
+	cssFiles: string[];
+	mdFlavor: Flavor;
+	pdfOptions: PrintToPDFOptions;
+	showdownOptions: ShowdownOptions;
+	wrapperClasses: string;
+}
+
+const DEFAULT_OPTIONS: Options = {
 	cssString: "",
 	cssFiles: [],
 	mdFlavor: "github",
@@ -13,7 +22,7 @@ const DEFAULT_OPTIONS = {
 	wrapperClasses: "",
 };
 
-function mdToPdfBuffer(md, options) {
+export function mdToPdfBuffer(md: string, options: Partial<Options>): Promise<Buffer> {
 	return new Promise((resolve, reject) => {
 		const optionsWithDefaults = {
 			...DEFAULT_OPTIONS,
@@ -60,18 +69,23 @@ function mdToPdfBuffer(md, options) {
 				nodeIntegration: false,
 			},
 		});
+		pdfWindow.on("closed", () => {
+			// Allow `pdfWindow` to be garbage collected
+			pdfWindow = null!;
+		});
 		pdfWindow.webContents.on("did-finish-load", () => {
 			pdfWindow.webContents.insertCSS(css);
-			pdfWindow.webContents.printToPDF(pdfOptions, (err, data) => {
-				if (err) {
-					return reject(err);
-				}
-				pdfWindow.close();
-				return resolve(data);
-			});
-		});
-		pdfWindow.on("closed", () => {
-			pdfWindow = null;
+			pdfWindow.webContents
+				.printToPDF(pdfOptions)
+				.then(data => {
+					resolve(data);
+				})
+				.catch(err => {
+					reject(err);
+				})
+				.then(() => {
+					pdfWindow.close();
+				});
 		});
 
 		// Load Markdown HTML into pdfWindow
@@ -79,20 +93,11 @@ function mdToPdfBuffer(md, options) {
 	});
 }
 
-function mdToPdfFile(md, filePath, options) {
-	return new Promise((resolve, reject) => {
-		return mdToPdfBuffer(md, options)
-			.then(pdfBuffer => {
-				fs.writeFileSync(filePath, pdfBuffer);
-				return resolve();
-			})
-			.catch(err => {
-				return reject(err);
-			});
-	});
+export async function mdToPdfFile(
+	md: string,
+	filePath: string,
+	options: Partial<Options>,
+): Promise<void> {
+	const pdfBuffer = await mdToPdfBuffer(md, options);
+	fs.writeFileSync(filePath, pdfBuffer);
 }
-
-module.exports = {
-	mdToPdfBuffer,
-	mdToPdfFile,
-};

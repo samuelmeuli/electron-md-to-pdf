@@ -10,52 +10,89 @@
 		"convert",
 		"export"
 	],
-	"main": "index.js",
-	"author": "Samuel Meuli <me@samuelmeuli.com>",
+	"author": {
+		"name": "Samuel Meuli",
+		"email": "me@samuelmeuli.com",
+		"url": "https://samuelmeuli.com"
+	},
 	"repository": "github:samuelmeuli/electron-md-to-pdf",
 	"license": "MIT",
+	"files": [
+		"index.js",
+		"index.js.map",
+		"index.d.ts",
+		"index.d.ts.map"
+	],
+	"main": "./index.js",
+	"types": "./index.d.ts",
 	"scripts": {
-		"start": "electron example/main.js",
+		"start": "npm-run-all build --parallel start:*",
+		"start:ts": "tsc --noEmit --watch",
+		"start:electron": "electron example/main.js",
+		"build": "tsc",
 		"format": "prettier --write",
-		"lint": "eslint --fix",
+		"lint": "eslint --ext .ts,.tsx --fix --max-warnings 0",
+		"version": "yarn build",
 		"release": "np"
 	},
 	"dependencies": {
+		"@types/showdown": "^1.9.3",
 		"showdown": "^1.9.0"
 	},
 	"peerDependencies": {
 		"electron": "^6.0.0"
 	},
 	"devDependencies": {
+		"@samuelmeuli/eslint-config": "^3.0.1",
+		"@samuelmeuli/tsconfig": "^0.1.1",
+		"@typescript-eslint/eslint-plugin": "^2.0.0",
+		"@typescript-eslint/parser": "^2.0.0",
 		"electron": "^6.0.2",
 		"electron-debug": "^3.0.1",
+		"electron-unhandled": "^3.0.0",
 		"eslint": "6.1.0",
 		"eslint-config-airbnb-base": "14.0.0",
 		"eslint-config-prettier": "^6.0.0",
 		"eslint-plugin-import": "^2.18.2",
+		"eslint-plugin-simple-import-sort": "^4.0.0",
 		"github-markdown-css": "^3.0.1",
 		"husky": "^3.0.3",
 		"lint-staged": "^9.2.1",
 		"np": "^5.0.3",
-		"prettier": "^1.18.2"
+		"npm-run-all": "^4.1.5",
+		"prettier": "^1.18.2",
+		"typescript": "^3.5.3"
 	},
-	"files": [
-		"index.js"
-	],
+	"eslintConfig": {
+		"root": true,
+		"extends": [
+			"@samuelmeuli/eslint-config/base-typescript",
+			"prettier",
+			"prettier/@typescript-eslint"
+		],
+		"env": {
+			"browser": true,
+			"node": true
+		}
+	},
+	"prettier": {
+		"printWidth": 100,
+		"trailingComma": "all"
+	},
+	"lint-staged": {
+		"*.{ts,tsx}": [
+			"yarn lint",
+			"yarn format",
+			"git add"
+		],
+		"*.{css,js,json,jsx,md,scss,yml}": [
+			"yarn format",
+			"git add"
+		]
+	},
 	"husky": {
 		"hooks": {
 			"pre-commit": "lint-staged"
 		}
-	},
-	"lint-staged": {
-		"*.js": [
-			"yarn format",
-			"yarn lint",
-			"git add"
-		],
-		"*.{html,json,md,yml}": [
-			"yarn format",
-			"git add"
-		]
 	}
 }
