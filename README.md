@@ -28,7 +28,7 @@ The `options` parameter is optional. It's an object which may contain the follow
 - `showdownOptions` (Object): Other options for the HTML generation (see the [Showdown docs](https://github.com/showdownjs/showdown#valid-options))
 - `wrapperClasses` (String): Class(es) to apply to the wrapper `div` around the Markdown HTML
 
-**See the examples on how to use the module in the [main process](./example/main.js) and [renderer process](./example/renderer.js).**
+**See the examples on how to use the module in the [main process](./example/main.ts) and [renderer process](./example/renderer.ts).**
 
 ## Development
 
