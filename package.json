@@ -30,6 +30,7 @@
 		"start:ts": "tsc --noEmit --watch",
 		"start:electron": "electron example/main.js",
 		"build": "tsc",
+		"test": "tsc --noEmit",
 		"format": "prettier --write",
 		"lint": "eslint --ext .ts,.tsx --fix --max-warnings 0",
 		"version": "yarn build",
@@ -92,7 +93,7 @@
 	},
 	"husky": {
 		"hooks": {
-			"pre-commit": "lint-staged"
+			"pre-commit": "yarn test && lint-staged"
 		}
 	}
 }
