@@ -1,6 +1,6 @@
 {
 	"name": "electron-md-to-pdf",
-	"version": "2.1.0",
+	"version": "2.1.1",
 	"description": "Convert Markdown to PDF in Electron apps",
 	"keywords": [
 		"electron",
