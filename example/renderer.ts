@@ -12,7 +12,7 @@ const rendererExportButton = document.getElementById("button-export-renderer") a
 async function exportFromRenderer(): Promise<void> {
 	try {
 		await mdToPdfFile(md, pdfPathRenderer, {
-			cssFiles: [`${__dirname}/../node_modules/github-markdown-css/github-markdown.css`],
+			cssFiles: [`${__dirname}/styles.css`],
 			wrapperClasses: "markdown-body",
 		});
 		await remote.dialog.showMessageBox({

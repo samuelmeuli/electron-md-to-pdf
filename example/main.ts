@@ -51,7 +51,7 @@ app.on(
 async function exportFromMain(): Promise<void> {
 	try {
 		await mdToPdfFile(md, pdfPathMain, {
-			cssFiles: [`${__dirname}/../node_modules/github-markdown-css/github-markdown.css`],
+			cssFiles: [`${__dirname}/styles.css`],
 			wrapperClasses: "markdown-body",
 		});
 		await dialog.showMessageBox({
