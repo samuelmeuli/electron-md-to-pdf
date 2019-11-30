@@ -41,7 +41,7 @@
 		"showdown": "^1.9.1"
 	},
 	"peerDependencies": {
-		"electron": "^6.0.0 | ^7.0.0"
+		"electron": "*"
 	},
 	"devDependencies": {
 		"@samuelmeuli/eslint-config": "^4.0.1",
