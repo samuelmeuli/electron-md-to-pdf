@@ -1,10 +1,12 @@
 import electron, { PrintToPDFOptions } from "electron";
 import fs from "fs";
+import { normalize } from "path";
 import showdown, { Flavor, ShowdownOptions } from "showdown";
 
 const BrowserWindow = electron.BrowserWindow || electron.remote.BrowserWindow;
 
 interface Options {
+	basePath: string;
 	cssString: string;
 	cssFiles: string[];
 	mdFlavor: Flavor;
@@ -14,6 +16,7 @@ interface Options {
 }
 
 const DEFAULT_OPTIONS: Options = {
+	basePath: __dirname,
 	cssString: "",
 	cssFiles: [],
 	mdFlavor: "github",
@@ -29,6 +32,7 @@ export function mdToPdfBuffer(md: string, options: Partial<Options>): Promise<Bu
 			...options,
 		};
 		const {
+			basePath,
 			cssString,
 			cssFiles,
 			mdFlavor,
@@ -53,6 +57,9 @@ export function mdToPdfBuffer(md: string, options: Partial<Options>): Promise<Bu
 		const htmlWrapped = `
 			<!DOCTYPE html>
 			<html>
+				<head>
+					<base href="file://${normalize(basePath)}/" />
+				</head>
 				<body>
 					<div class="${wrapperClasses}">
 						${html}
@@ -67,6 +74,7 @@ export function mdToPdfBuffer(md: string, options: Partial<Options>): Promise<Bu
 			show: false,
 			webPreferences: {
 				nodeIntegration: false,
+				webSecurity: false, // Required for loading local resources (e.g. images)
 			},
 		});
 		pdfWindow.on("closed", () => {

@@ -19,3 +19,5 @@ _Italic_, **bold**, `code`, [link](https://example.com).
 - Item 1
 - Item 2
 - Item 3
+
+![Sample image](./sample-image.png)

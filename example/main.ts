@@ -51,6 +51,7 @@ app.on(
 async function exportFromMain(): Promise<void> {
 	try {
 		await mdToPdfFile(md, pdfPathMain, {
+			basePath: __dirname,
 			cssFiles: [`${__dirname}/styles.css`],
 			wrapperClasses: "markdown-body",
 		});

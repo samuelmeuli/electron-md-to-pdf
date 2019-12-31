@@ -21,6 +21,7 @@ Both functions return promises.
 
 The `options` parameter is optional. It's an object which may contain the following values:
 
+- `basePath` (String): Base directory for relative paths of resources, e.g. images. Default: Current directory
 - `cssString` (String): CSS string to inject into the HTML which is generated from the Markdown string (e.g. `"body { color: red; }"`)
 - `cssFiles` (String array): Array of CSS files to inject into the HTML (e.g. `["./path/to/styles.css"]`)
 - `mdFlavor` (String): Markdown flavor to use, one of `["original", "vanilla", "github"]` (see the [Showdown docs](https://github.com/showdownjs/showdown#flavors)). Default is `"github"`

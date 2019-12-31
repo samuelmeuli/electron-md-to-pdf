@@ -12,6 +12,7 @@ const rendererExportButton = document.getElementById("button-export-renderer") a
 async function exportFromRenderer(): Promise<void> {
 	try {
 		await mdToPdfFile(md, pdfPathRenderer, {
+			basePath: __dirname,
 			cssFiles: [`${__dirname}/styles.css`],
 			wrapperClasses: "markdown-body",
 		});
