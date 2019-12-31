@@ -71,7 +71,8 @@ export function mdToPdfBuffer(md: string, options: Partial<Options>): Promise<Bu
 		});
 		pdfWindow.on("closed", () => {
 			// Allow `pdfWindow` to be garbage collected
-			pdfWindow = null!;
+			// @ts-ignore
+			pdfWindow = null;
 		});
 		pdfWindow.webContents.on("did-finish-load", () => {
 			pdfWindow.webContents.insertCSS(css);
