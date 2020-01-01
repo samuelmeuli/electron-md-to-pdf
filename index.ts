@@ -25,7 +25,7 @@ const DEFAULT_OPTIONS: Options = {
 	wrapperClasses: "",
 };
 
-export function mdToPdfBuffer(md: string, options: Partial<Options>): Promise<Buffer> {
+export async function mdToPdfBuffer(md: string, options: Partial<Options>): Promise<Buffer> {
 	return new Promise((resolve, reject) => {
 		const optionsWithDefaults = {
 			...DEFAULT_OPTIONS,
@@ -84,17 +84,15 @@ export function mdToPdfBuffer(md: string, options: Partial<Options>): Promise<Bu
 		});
 		pdfWindow.webContents.on("did-finish-load", async () => {
 			await pdfWindow.webContents.insertCSS(css);
-			pdfWindow.webContents
-				.printToPDF(pdfOptions)
-				.then(data => {
-					resolve(data);
-				})
-				.catch(err => {
-					reject(err);
-				})
-				.then(() => {
-					pdfWindow.close();
-				});
+			let buffer;
+			try {
+				buffer = await pdfWindow.webContents.printToPDF(pdfOptions);
+				resolve(buffer);
+			} catch (err) {
+				reject(err);
+			} finally {
+				pdfWindow.close();
+			}
 		});
 
 		// Load Markdown HTML into pdfWindow
