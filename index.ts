@@ -82,8 +82,8 @@ export function mdToPdfBuffer(md: string, options: Partial<Options>): Promise<Bu
 			// @ts-ignore
 			pdfWindow = null;
 		});
-		pdfWindow.webContents.on("did-finish-load", () => {
-			pdfWindow.webContents.insertCSS(css);
+		pdfWindow.webContents.on("did-finish-load", async () => {
+			await pdfWindow.webContents.insertCSS(css);
 			pdfWindow.webContents
 				.printToPDF(pdfOptions)
 				.then(data => {
